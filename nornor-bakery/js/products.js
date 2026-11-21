@@ -1,7 +1,7 @@
-// 商品资料 / Product data — 改价钱、图片、库存都在这里
+﻿// 商品资料 / Product data — 改价钱、图片、库存都在这里
 // image 留空会显示彩色占位图(用 emoji)。available:false = 售罄。checkoutUrl 以后可填各商品付款链接。
 // emoji 可选，只用在没有照片时。价钱是示例价，请按你的实际价钱修改。
-const CATEGORIES = ["Cakes", "Cookies", "Brownies", "Pastries", "Premium Drinks", "Fruit Juices"];
+const CATEGORIES = ["Cakes", "Cookies", "Brownies", "Pastries", "Premium Drinks", "Fruit Juices", "Blind Box"];
 const P = (id, name, category, price, desc, o = {}) => ({
   id, name, category, price, desc, image: "", available: true, labels: [], popularity: 50, checkoutUrl: "", emoji: "", ...o
 });
@@ -104,5 +104,19 @@ const PRODUCTS = [
     { labels: ["New"], popularity: 70, emoji: "🍓" }),
   P("dragonfruit-juice", "Dragon Fruit Juice", "Fruit Juices", 11,
     "Vibrant pink juice from red dragon fruit.",
-    { popularity: 50, emoji: "🐉" })
+    { popularity: 50, emoji: "🐉" }),
+  // ---- Blind Box ----
+  P("blind-box", "Mystery Blind Box", "Blind Box", 29,
+    "1 random collectible figurine from 3 designs, including a chance at the hidden limited edition. Packed randomly by the shop.",
+    { image: "assets/blindbox/box.svg", labels: ["New", "Limited"], popularity: 97, emoji: "🎁" })
 ];
+
+// 盲盒设定 / Blind box setup — chance 是你们装箱的比例(合计 100)，请按实际装箱比例修改。
+const BLINDBOX = {
+  productId: "blind-box",
+  figures: [
+    { id: "dog", name: "Latte Pup", note: "A little dog sipping coffee", rarity: "Regular", chance: 45, image: "assets/blindbox/dog.svg" },
+    { id: "cat", name: "Cake Kitty", note: "A kitty sitting down to eat cake", rarity: "Regular", chance: 45, image: "assets/blindbox/cat.svg" },
+    { id: "trex", name: "Sunny Rex", note: "T-rex in sunglasses, sunbathing with fruit juice", rarity: "Hidden · Limited", chance: 10, image: "assets/blindbox/trex.svg", hidden: true }
+  ]
+};

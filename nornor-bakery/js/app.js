@@ -1,4 +1,4 @@
-﻿const $ = s => document.querySelector(s);
+const $ = s => document.querySelector(s);
 const rm = n => "RM " + Number(n).toFixed(2);
 const el = (t, props = {}, ...kids) => { const e = document.createElement(t); Object.assign(e, props); kids.forEach(k => e.append(k)); return e; };
 const wa = txt => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`;
@@ -10,7 +10,7 @@ const lines = () => Object.entries(cart).map(([id, q]) => ({ p: find(id), q })).
 const total = () => lines().reduce((s, l) => s + l.p.price * l.q, 0);
 
 const CAT_STYLE = { Cakes: ["🍰", "#f2d9d2", "#e9b9ad"], Cookies: ["🍪", "#f1e2c4", "#dcc08a"], Brownies: ["🍫", "#d9c0b0", "#a67a62"],
-  Pastries: ["🥐", "#f6e3b8", "#e3c06f"], "Premium Drinks": ["☕", "#e5d3c2", "#b88f6c"], "Fruit Juices": ["🍹", "#fde0c2", "#f7a96b"] };
+  Pastries: ["🥐", "#f6e3b8", "#e3c06f"], "Blind Box": ["🎁", "#f6e3e8", "#d98ca3"], "Premium Drinks": ["☕", "#e5d3c2", "#b88f6c"], "Fruit Juices": ["🍹", "#fde0c2", "#f7a96b"] };
 function art(p) {
   const [e, a, b] = CAT_STYLE[p.category] || ["🧁", "#f2d9d2", "#e9b9ad"];
   const d = el("span", { className: "art" }, el("i", { textContent: p.emoji || e }), el("small", { textContent: p.name }));
@@ -79,11 +79,11 @@ function cartView() {
 function openCart() { $("#result").replaceChildren(); cartView(); if (!$("#cart").open) $("#cart").showModal(); }
 function summary(o) {
   return `Hi ${CONFIG.shopName}, I'd like to order:\n` + lines().map(l => `- ${l.p.name} x${l.q} (${rm(l.p.price * l.q)})`).join("\n") +
-    `\nSubtotal: ${rm(total())}\nName: ${o.name}\nPhone: ${o.phone}\n${o.method}${o.address ? ": " + o.address : ""}${o.date ? "\nDate: " + o.date : ""}${o.note ? "\nNote: " + o.note : ""}\n(Please confirm availability and payment.)`;
+    `\nSubtotal: ${rm(total())}\nName: ${o.name}\nPhone: ${o.phone}\nPayment: ${o.payment}\n${o.method}${o.address ? ": " + o.address : ""}${o.date ? "\nDate: " + o.date : ""}${o.note ? "\nNote: " + o.note : ""}\n(Please confirm availability and payment.)`;
 }
 $("#form").onsubmit = async e => {
   e.preventDefault(); const r = $("#result"); r.replaceChildren();
-  const o = { name: $("#f-name").value.trim(), phone: $("#f-phone").value.trim(), method: $("#f-method").value, address: $("#f-addr").value.trim(), date: $("#f-date").value, note: $("#f-note").value.trim() };
+  const o = { name: $("#f-name").value.trim(), phone: $("#f-phone").value.trim(), method: $("#f-method").value, payment: $("#f-pay").value, address: $("#f-addr").value.trim(), date: $("#f-date").value, note: $("#f-note").value.trim() };
   if (!o.name || !/^[0-9+\-\s]{8,16}$/.test(o.phone)) { r.append(el("div", { className: "msg", textContent: "Enter your name and a valid phone number (8–16 digits)." })); return; }
   if (o.method === "Delivery" && !o.address) { r.append(el("div", { className: "msg", textContent: "Enter a delivery address." })); return; }
   if (CONFIG.generalCheckoutUrl) { window.open(CONFIG.generalCheckoutUrl, "_blank", "noopener,noreferrer"); }
@@ -106,6 +106,7 @@ CATEGORIES.forEach(c => { const [e, a, b2] = CAT_STYLE[c]; const t = el("button"
 $("#promo").onclick = e => { e.preventDefault(); go("Cakes"); };
 ["#q", "#sort"].forEach(s => $(s).addEventListener("input", render));
 $("#cartBar").onclick = openCart;
+CONFIG.payments.forEach(m => $("#f-pay").append(el("option", { value: m.name, textContent: m.name })));
 $("#f-date").min = new Date().toISOString().slice(0, 10);
 $("#cartBtn").onclick = openCart;
 document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
@@ -118,12 +119,14 @@ $("#waLink").textContent = "+" + CONFIG.whatsapp; $("#waLink").href = wa(`Hi ${C
 $("#askBtn").href = wa(`Hi ${CONFIG.shopName}, I'd like to ask about your products and availability.`);
 [["Instagram", CONFIG.instagram], ["TikTok", CONFIG.tiktok]].forEach(([n, u]) => { if (/^https:\/\//.test(u)) $("#soc").append(" ", el("a", { href: u, textContent: n, target: "_blank", rel: "noopener noreferrer" })); });
 $("#customBtn").href = wa(`Hi ${CONFIG.shopName}, I'd like to ask about a custom order.`);
+const payList = $("#payList");
+CONFIG.payments.forEach(m => { const li = el("li", {}, el("span", { className: "pi", textContent: m.icon || "💳" }), el("div", {}, el("strong", { textContent: m.name }), el("br"), el("span", { className: m.detail ? "" : "tbc", textContent: m.detail || "Details shared on WhatsApp after your order is confirmed." })));
+  if (m.qr) li.append(el("img", { src: m.qr, alt: m.name + " QR code", loading: "lazy", className: "qr" })); payList.append(li); });
 $("#yr").textContent = new Date().getFullYear();
 render();
 (() => {
   const i = $("#intro"); if (!i) return;
-  try { sessionStorage.setItem("nn_intro", "1"); } catch {}
-  const done = () => i.classList.add("out"); setTimeout(done, 2600); i.onclick = done;
+    const done = () => i.classList.add("out"); setTimeout(done, 2600); i.onclick = done;
 })();
 
 

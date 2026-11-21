@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script>try{if(sessionStorage.getItem("nn_intro")||matchMedia("(prefers-reduced-motion:reduce)").matches)document.documentElement.classList.add("no-intro")}catch(e){}</script>
+<script>try{if(matchMedia("(prefers-reduced-motion:reduce)").matches)document.documentElement.classList.add("no-intro")}catch(e){}</script>
 <title>Nor Nor Bakery | Homemade Cakes, Bakes & Fresh Drinks</title>
 <meta name="description" content="Nor Nor Bakery – homemade pandan and banana cakes, brownies, cookies, premium drinks and fresh fruit juices. Order via WhatsApp.">
 <meta property="og:title" content="Nor Nor Bakery"><meta property="og:description" content="Homemade cakes, bakes and fresh drinks, made daily.">
@@ -24,7 +24,7 @@
 <div class="topbar">Fresh cakes, bakes &amp; drinks · Order via WhatsApp · Confirmed by the shop</div>
 <header><div class="wrap"><a class="logo" href="#top"><img src="assets/logo.svg" alt="" width="40" height="40"><span>Nor Nor Bakery</span></a>
 <button id="menuBtn" aria-label="Menu" aria-expanded="false">☰</button>
-<nav id="nav" aria-label="Main"><a href="#categories">Categories</a><a href="#shop">Shop</a><a href="#how">How to order</a><a href="#info">Delivery &amp; FAQ</a><a href="#contact">Contact</a>
+<nav id="nav" aria-label="Main"><a href="#categories">Categories</a><a href="#shop">Shop</a><a href="#blindbox">Blind Box</a><a href="#how">How to order</a><a href="#info">Delivery &amp; FAQ</a><a href="#contact">Contact</a>
 <button class="cartBtn" id="cartBtn">Cart (<span id="count">0</span>)</button></nav></div></header>
 <main id="top">
 <section class="hero"><i class="chip c1"></i><i class="chip c2"></i><i class="chip c3"></i><i class="chip c4"></i><i class="chip c5"></i><i class="chip c6"></i><div class="wrap"><div class="copy">
@@ -42,6 +42,15 @@
 
 <section id="categories"><div class="wrap"><h2>Shop by category</h2><div class="tiles" id="tiles"></div>
 <a class="promo" href="#shop" id="promo"><span>New</span><strong>Pandan &amp; Banana cakes are here 🌿🍌</strong><em>See the range →</em></a></div></section>
+
+<section id="blindbox" class="bb"><div class="wrap">
+<p class="badge dark">New · Collectible figurines</p>
+<h2>Mystery Blind Box</h2>
+<p class="bbIntro">Every box holds one cute figurine. Which one will you get? Two regular designs and one hidden limited edition.</p>
+<div class="bbGrid" id="bbGrid"></div>
+<div class="bbActions"><button class="btn" id="bbAdd" type="button"></button><button class="btn alt" id="bbTry" type="button">✨ Try unboxing (just for fun)</button></div>
+<p class="muted">The figurine in your real box is randomly packed by the shop. The unboxing preview is only for fun and does not decide your order.</p>
+</div></section>
 
 <section id="shop" class="shopSec"><div class="wrap"><h2>Our menu</h2>
 <div class="chips" id="chips" role="tablist" aria-label="Categories"></div>
@@ -65,7 +74,9 @@
 
 <section id="info" class="soft"><div class="wrap two"><div><h2>Delivery &amp; pickup</h2>
 <p><strong>Delivery:</strong> <span id="deliv"></span></p><p><strong>Pickup:</strong> <span id="pick"></span></p>
-<p><strong>Refunds &amp; cancellation:</strong> <span id="refund"></span></p></div>
+<p><strong>Refunds &amp; cancellation:</strong> <span id="refund"></span></p>
+<h2 class="sub">Payment methods</h2><ul class="pay" id="payList"></ul>
+<p class="muted">Pay after the shop confirms your order. The website does not take payment.</p></div>
 <div><h2>FAQ</h2>
 <details><summary>How do I pay?</summary><p>After you send your order, the shop confirms by WhatsApp and shares payment details.</p></details>
 <details><summary>Is my order confirmed after I submit?</summary><p>No. It is confirmed only when the shop replies to you.</p></details>
@@ -81,6 +92,7 @@
 <button id="musicBtn" class="music" aria-pressed="false">♪ Music off</button>
 <button id="cartBar" class="cartBar" hidden><span>🛒 <span id="barCount">0</span> items</span><strong id="barTotal"></strong><span>View cart →</span></button>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<dialog id="unbox"><div class="in"><button class="x" data-close aria-label="Close">×</button><h2>Unboxing preview</h2><div id="unboxStage"></div></div></dialog>
 <dialog id="detail"><div class="in" id="detailBody"></div></dialog>
 <dialog id="cart"><div class="in"><button class="x" data-close aria-label="Close">×</button><h2>Your cart</h2>
 <div id="cartBody"></div>
@@ -89,10 +101,11 @@
 <label for="f-phone">Phone / WhatsApp</label><input id="f-phone" required inputmode="tel" maxlength="16" autocomplete="tel" placeholder="0123456789">
 <label for="f-method">Pickup or delivery</label><select id="f-method"><option>Pickup</option><option>Delivery</option></select>
 <label for="f-addr">Delivery address (if delivery)</label><input id="f-addr" maxlength="200">
+<label for="f-pay">Preferred payment method</label><select id="f-pay"></select>
 <label for="f-date">Preferred date</label><input id="f-date" type="date">
 <label for="f-note">Note (optional)</label><textarea id="f-note" maxlength="300" rows="2"></textarea>
 <p style="font-size:.85rem">Submitting does not confirm your order or take payment. The shop will contact you.</p>
 <button class="btn" type="submit" style="width:100%">Send order</button></form>
 <div id="result" role="status"></div></div></dialog>
-<script src="js/config.js"></script><script src="js/products.js"></script><script src="js/app.js"></script><script src="js/music.js"></script>
+<script src="js/config.js"></script><script src="js/products.js"></script><script src="js/app.js"></script><script src="js/music.js"></script><script src="js/blindbox.js"></script><script src="js/fx.js"></script>
 </body></html>
