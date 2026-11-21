@@ -168,3 +168,27 @@ nav a:hover::after,nav a.active::after{transform:scaleX(1)}
 .pay li{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px}
 .pay .pi{font-size:1.6rem}.pay .qr{width:90px;margin-left:auto;border-radius:8px}
 @media(prefers-reduced-motion:reduce){.bbImg img,.q,.shake,.reveal,nav a,.btn,.bbCard{animation:none;transition:none}}
+
+/* ---- v5: PIN credit ---- */
+.pinBox{background:#fff;border:1.5px dashed var(--caramel);border-radius:12px;padding:12px 14px;margin:8px 0 14px}
+.pinBox label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px}
+.pinRow{display:flex;gap:8px}.pinRow input{flex:1;font:inherit;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;text-transform:uppercase;letter-spacing:.08em}
+.pinRow .btn{padding:9px 18px}
+.pinMsg{margin:6px 0 0;font-size:.88rem;min-height:1.2em}.pinMsg.okTxt{color:var(--ok);font-weight:700}
+#rewards .pinBox{margin:0}
+.credit{color:var(--ok);font-weight:700;margin:6px 0}
+.pinBox small{display:block;margin-top:6px;line-height:1.4}
+.linkBtn{background:none;border:0;padding:0;font:inherit;font-size:.85rem;color:var(--caramel);text-decoration:underline;cursor:pointer}
+
+/* ---- v6: quick tour ---- */
+.tour{position:fixed;left:50%;bottom:72px;transform:translateX(-50%);z-index:90;width:min(340px,92vw);background:#fff;color:var(--cocoa);border:1.5px solid var(--caramel);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(58,35,23,.28);animation:pop .25s ease}
+.tour strong{font:700 1.2rem "Cormorant Garamond",serif}.tour p{margin:2px 0 8px;font-size:.88rem;line-height:1.4}
+.tcount{float:right;font-size:.75rem;opacity:.6}
+.tact{display:flex;align-items:center;gap:6px}.grow{flex:1}
+.tbtn,.tskip{font:inherit;font-size:.85rem;border-radius:999px;padding:5px 14px;cursor:pointer;border:1.5px solid var(--cocoa);background:#fff;color:var(--cocoa)}
+.tbtn[disabled]{opacity:.35;cursor:default}.tbtn.pri{background:var(--cocoa);color:var(--cream)}
+.tskip{border:0;background:none;text-decoration:underline;padding:5px 4px;opacity:.7}
+.tour-hl{outline:3px solid #f1d9a0;outline-offset:4px;box-shadow:0 0 0 7px rgba(169,116,47,.4);border-radius:12px;animation:tpulse 1.4s ease-in-out infinite}
+@keyframes tpulse{50%{box-shadow:0 0 0 12px rgba(169,116,47,.15)}}
+.helpBtn{position:fixed;left:136px;bottom:16px;z-index:30;width:36px;height:36px;border-radius:50%;border:1.5px solid #f1d9a0;background:var(--cocoa);color:#f1d9a0;font:700 1rem inherit;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+@media(prefers-reduced-motion:reduce){.tour,.tour-hl{animation:none}}

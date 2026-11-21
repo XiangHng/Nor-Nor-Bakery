@@ -7,6 +7,14 @@ let cart = {}; try { cart = JSON.parse(localStorage.getItem("nn_cart") || "{}");
 const find = id => PRODUCTS.find(p => p.id === id);
 const save = () => { try { localStorage.setItem("nn_cart", JSON.stringify(cart)); } catch {} };
 const lines = () => Object.entries(cart).map(([id, q]) => ({ p: find(id), q })).filter(l => l.p && l.p.available && l.q > 0);
+let credit = 0, usedPins = []; try { credit = Math.max(0, Number(localStorage.getItem("nn_credit")) || 0); usedPins = JSON.parse(localStorage.getItem("nn_pins") || "[]"); } catch {}
+const saveCredit = () => { try { localStorage.setItem("nn_credit", credit); localStorage.setItem("nn_pins", JSON.stringify(usedPins)); } catch {} };
+let voucher = null; try { voucher = JSON.parse(localStorage.getItem("nn_voucher") || "null"); } catch {}
+const saveVoucher = () => { try { localStorage.setItem("nn_voucher", JSON.stringify(voucher)); } catch {} };
+const vDisc = () => { if (!voucher) return 0; const t = total(); if (t < (voucher.min || 0)) return 0;
+  let d = voucher.percent ? t * voucher.percent / 100 : (voucher.off || 0); if (voucher.max) d = Math.min(d, voucher.max); return Math.min(+d.toFixed(2), t); };
+const applied = () => Math.min(credit, total() - vDisc());
+const payable = () => Math.max(0, +(total() - vDisc() - applied()).toFixed(2));
 const total = () => lines().reduce((s, l) => s + l.p.price * l.q, 0);
 
 const CAT_STYLE = { Cakes: ["🍰", "#f2d9d2", "#e9b9ad"], Cookies: ["🍪", "#f1e2c4", "#dcc08a"], Brownies: ["🍫", "#d9c0b0", "#a67a62"],
@@ -74,12 +82,56 @@ function cartView() {
     b.append(el("div", { className: "row" }, el("div", {}, el("strong", { textContent: p.name }), el("br"), rm(p.price * q)),
       el("div", { className: "qty" }, m, el("span", { textContent: q }), pl), rem));
   });
-  b.append(el("p", {}, el("strong", { textContent: "Subtotal: " + rm(total()) })));
+  b.append(el("p", {}, "Subtotal: " + rm(total())));
+  if (voucher) {
+    const rmv = el("button", { type: "button", className: "linkBtn", textContent: "remove" }); rmv.onclick = () => { voucher = null; saveVoucher(); creditView(); render(); };
+    b.append(el("p", { className: "credit" }, vDisc() > 0 ? `Voucher ${voucher.code}: −${rm(vDisc())} ` : `Voucher ${voucher.code}: spend ${rm(voucher.min - total())} more to use `, rmv));
+  }
+  if (applied() > 0) b.append(el("p", { className: "credit" }, "Credit applied: −" + rm(applied())));
+  b.append(el("p", {}, el("strong", { textContent: "To pay: " + rm(payable()) })));
 }
+const boxes = [];
+function pinBox() {
+  const id = "pin" + boxes.length;
+  const input = el("input", { id, maxLength: 24, autocomplete: "off", spellcheck: false, placeholder: "Enter PIN or voucher" }); input.setAttribute("autocapitalize", "characters");
+  const go = el("button", { className: "btn", type: "button", textContent: "Redeem" });
+  const msg = el("p", { className: "pinMsg" }); msg.setAttribute("role", "status");
+  const cr = el("p", { className: "credit", hidden: true }), vi = el("p", { className: "credit", hidden: true });
+  const box = { input, go, msg, cr, vi };
+  const root = el("div", { className: "pinBox" }, el("label", { htmlFor: id, textContent: "Have a PIN or voucher code?" }), el("div", { className: "pinRow" }, input, go), msg, cr, vi,
+    el("small", { className: "muted", textContent: "Credit and vouchers have no cash value, cannot be withdrawn or refunded, and are applied only when the shop confirms your order. One voucher per order." }));
+  go.onclick = () => redeem(box);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); redeem(box); } });
+  boxes.push(box); return root;
+}
+function creditView() {
+  boxes.forEach(x => {
+    x.cr.hidden = credit <= 0; x.cr.textContent = "Your credit: " + rm(credit);
+    x.vi.hidden = !voucher; if (voucher) x.vi.textContent = "Voucher " + voucher.code + (voucher.label ? " · " + voucher.label : "") + (voucher.min ? " · min spend " + rm(voucher.min) : "");
+  });
+  if ($("#cart").open) cartView();
+}
+async function redeem(x) {
+  const m = x.msg, pin = x.input.value.trim().toUpperCase(); m.className = "pinMsg";
+  if (!pin) { m.textContent = "Enter a PIN or voucher code."; return; }
+  if (usedPins.includes(pin) || (voucher && voucher.code === pin)) { m.textContent = "This PIN or voucher is already in use on this device."; return; }
+  x.go.disabled = true; m.textContent = "Checking…";
+  const fx = (n, set) => { if (window.burst) { const r = x.go.getBoundingClientRect(); window.burst(r.left + r.width / 2, r.top, n, set); } };
+  try {
+    const res = await fetch(CONFIG.pinApi, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ pin }) });
+    const d = await res.json().catch(() => ({}));
+    if (res.ok && d.ok && d.kind === "voucher") { voucher = { code: d.code, percent: d.percent, off: d.off, min: d.min, max: d.max, label: d.label }; saveVoucher(); boxes.forEach(y => y.input.value = ""); m.className = "pinMsg okTxt"; m.textContent = "🎟️ Voucher " + d.code + " added!"; creditView(); render(); fx(14, ["🎟️", "✨", "⭐"]); }
+    else if (res.ok && d.ok) { credit = +(credit + d.amount).toFixed(2); usedPins.push(pin); saveCredit(); boxes.forEach(y => y.input.value = ""); m.className = "pinMsg okTxt"; m.textContent = "🎉 " + rm(d.amount) + " credit added!"; creditView(); fx(18, ["🎉", "✨", "⭐", "🧁"]); }
+    else m.textContent = res.status === 404 || res.status === 400 ? "That PIN or voucher is not valid." : "Could not check the code. Please try again later.";
+  } catch { m.textContent = "Could not check the code. Please try again later."; }
+  x.go.disabled = false;
+}
+$("#pinMountCart").append(pinBox()); $("#pinMountPage").append(pinBox());
+$("#promoHint").textContent = CONFIG.promoHint || "";
 function openCart() { $("#result").replaceChildren(); cartView(); if (!$("#cart").open) $("#cart").showModal(); }
 function summary(o) {
   return `Hi ${CONFIG.shopName}, I'd like to order:\n` + lines().map(l => `- ${l.p.name} x${l.q} (${rm(l.p.price * l.q)})`).join("\n") +
-    `\nSubtotal: ${rm(total())}\nName: ${o.name}\nPhone: ${o.phone}\nPayment: ${o.payment}\n${o.method}${o.address ? ": " + o.address : ""}${o.date ? "\nDate: " + o.date : ""}${o.note ? "\nNote: " + o.note : ""}\n(Please confirm availability and payment.)`;
+    `\nSubtotal: ${rm(total())}${vDisc() > 0 ? `\nVoucher ${voucher.code}: -${rm(vDisc())}` : ""}${applied() > 0 ? `\nCredit applied: -${rm(applied())}` : ""}${vDisc() > 0 || applied() > 0 ? `\nTo pay: ${rm(payable())}` : ""}\nName: ${o.name}\nPhone: ${o.phone}\n${o.payment ? "\nPayment: " + o.payment : ""}\n${o.method}${o.address ? ": " + o.address : ""}${o.date ? "\nDate: " + o.date : ""}${o.note ? "\nNote: " + o.note : ""}\n(Please confirm availability and payment.)`;
 }
 $("#form").onsubmit = async e => {
   e.preventDefault(); const r = $("#result"); r.replaceChildren();
@@ -88,16 +140,18 @@ $("#form").onsubmit = async e => {
   if (o.method === "Delivery" && !o.address) { r.append(el("div", { className: "msg", textContent: "Enter a delivery address." })); return; }
   if (CONFIG.generalCheckoutUrl) { window.open(CONFIG.generalCheckoutUrl, "_blank", "noopener,noreferrer"); }
   const waBtn = el("a", { className: "btn", textContent: "Also send on WhatsApp", target: "_blank", rel: "noopener noreferrer", href: wa(summary(o)) });
-  let sent = false;
+  let sent = false; const usedCredit = applied(), usedVoucher = vDisc() > 0; let spent = false;
+  const spend = () => { if (spent) return; spent = true; credit = Math.max(0, +(credit - usedCredit).toFixed(2)); saveCredit(); if (usedVoucher) { voucher = null; saveVoucher(); } creditView(); };
+  waBtn.addEventListener("click", spend);
   try {
     const res = await fetch(CONFIG.orderApi, { method: "POST", headers: { "content-type": "application/json" },
-      body: JSON.stringify({ ...o, total: total(), items: lines().map(l => ({ name: l.p.name, qty: l.q })) }) });
+      body: JSON.stringify({ ...o, total: total(), credit: applied(), pins: usedPins, voucher: vDisc() > 0 ? voucher.code : "", discount: vDisc(), items: lines().map(l => ({ name: l.p.name, qty: l.q })) }) });
     sent = res.ok;
   } catch {}
   r.append(el("div", { className: "msg " + (sent ? "ok" : "") },
     sent ? "Order submitted. It is not confirmed yet. The shop will contact you on WhatsApp to confirm and arrange payment."
          : "We could not send the order automatically. Please tap the button below to send it by WhatsApp. It is not confirmed until the shop replies.", el("br"), el("br"), waBtn));
-  if (sent) { cart = {}; save(); render(); $("#cartBody").replaceChildren(); $("#form").hidden = true; }
+  if (sent) { spend(); cart = {}; save(); render(); $("#cartBody").replaceChildren(); $("#form").hidden = true; }
 };
 const go = c => { setCat(c); $("#q").value = ""; render(); $("#shop").scrollIntoView({ behavior: "smooth" }); };
 ["", ...CATEGORIES].forEach(c => { const b = el("button", { type: "button", role: "tab", textContent: c || "All", className: "chip-b" }); b.dataset.c = c; b.onclick = () => setCat(c); $("#chips").append(b); });
@@ -106,7 +160,6 @@ CATEGORIES.forEach(c => { const [e, a, b2] = CAT_STYLE[c]; const t = el("button"
 $("#promo").onclick = e => { e.preventDefault(); go("Cakes"); };
 ["#q", "#sort"].forEach(s => $(s).addEventListener("input", render));
 $("#cartBar").onclick = openCart;
-CONFIG.payments.forEach(m => $("#f-pay").append(el("option", { value: m.name, textContent: m.name })));
 $("#f-date").min = new Date().toISOString().slice(0, 10);
 $("#cartBtn").onclick = openCart;
 document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
@@ -120,9 +173,12 @@ $("#askBtn").href = wa(`Hi ${CONFIG.shopName}, I'd like to ask about your produc
 [["Instagram", CONFIG.instagram], ["TikTok", CONFIG.tiktok]].forEach(([n, u]) => { if (/^https:\/\//.test(u)) $("#soc").append(" ", el("a", { href: u, textContent: n, target: "_blank", rel: "noopener noreferrer" })); });
 $("#customBtn").href = wa(`Hi ${CONFIG.shopName}, I'd like to ask about a custom order.`);
 const payList = $("#payList");
-CONFIG.payments.forEach(m => { const li = el("li", {}, el("span", { className: "pi", textContent: m.icon || "💳" }), el("div", {}, el("strong", { textContent: m.name }), el("br"), el("span", { className: m.detail ? "" : "tbc", textContent: m.detail || "Details shared on WhatsApp after your order is confirmed." })));
+if (!CONFIG.payments.length) payList.append(el("li", {}, el("span", { className: "pi", textContent: "💬" }), el("div", {}, el("span", { className: "tbc", textContent: "Payment details will be shared on WhatsApp after your order is confirmed." }))));
+CONFIG.payments.forEach(m => { $("#f-pay").append(el("option", { value: m.name, textContent: m.name })); $("#payRow").hidden = false;
+  const li = el("li", {}, el("span", { className: "pi", textContent: m.icon || "💳" }), el("div", {}, el("strong", { textContent: m.name }), el("br"), el("span", { className: m.detail ? "" : "tbc", textContent: m.detail || "Details shared on WhatsApp after your order is confirmed." })));
   if (m.qr) li.append(el("img", { src: m.qr, alt: m.name + " QR code", loading: "lazy", className: "qr" })); payList.append(li); });
 $("#yr").textContent = new Date().getFullYear();
+creditView();
 render();
 (() => {
   const i = $("#intro"); if (!i) return;

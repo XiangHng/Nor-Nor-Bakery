@@ -24,7 +24,7 @@
 <div class="topbar">Fresh cakes, bakes &amp; drinks · Order via WhatsApp · Confirmed by the shop</div>
 <header><div class="wrap"><a class="logo" href="#top"><img src="assets/logo.svg" alt="" width="40" height="40"><span>Nor Nor Bakery</span></a>
 <button id="menuBtn" aria-label="Menu" aria-expanded="false">☰</button>
-<nav id="nav" aria-label="Main"><a href="#categories">Categories</a><a href="#shop">Shop</a><a href="#blindbox">Blind Box</a><a href="#how">How to order</a><a href="#info">Delivery &amp; FAQ</a><a href="#contact">Contact</a>
+<nav id="nav" aria-label="Main"><a href="#categories">Categories</a><a href="#blindbox">Blind Box</a><a href="#shop">Shop</a><a href="#rewards">Rewards</a><a href="#how">How to order</a><a href="#info">Delivery &amp; FAQ</a><a href="#contact">Contact</a>
 <button class="cartBtn" id="cartBtn">Cart (<span id="count">0</span>)</button></nav></div></header>
 <main id="top">
 <section class="hero"><i class="chip c1"></i><i class="chip c2"></i><i class="chip c3"></i><i class="chip c4"></i><i class="chip c5"></i><i class="chip c6"></i><div class="wrap"><div class="copy">
@@ -59,11 +59,16 @@
 <p id="resultCount" class="muted" aria-live="polite"></p>
 <div class="grid" id="grid"></div><p id="none" hidden>No products match. Try another search.</p></div></section>
 
+<section id="rewards"><div class="wrap two"><div><h2>Got a PIN or voucher?</h2>
+<p>Enter a PIN for free credit, or a voucher code for a discount. Both are applied automatically at checkout.</p>
+<p class="muted" id="promoHint"></p></div>
+<div id="pinMountPage"></div></div></section>
+
 <section id="how" class="soft"><div class="wrap"><h2>How to order</h2>
 <ol class="steps">
 <li><b>1</b><h3>Pick</h3><p>Browse the menu and add your favourites to the cart.</p></li>
 <li><b>2</b><h3>Send</h3><p>Enter your details and send the order. Pickup or delivery.</p></li>
-<li><b>3</b><h3>Confirm</h3><p>We confirm availability on WhatsApp and share payment details.</p></li>
+<li><b>3</b><h3>Confirm</h3><p>We confirm availability and details on WhatsApp.</p></li>
 <li><b>4</b><h3>Enjoy</h3><p>Collect or receive your fresh order.</p></li></ol>
 <p class="muted">An order is only confirmed when the shop replies.</p></div></section>
 
@@ -76,9 +81,9 @@
 <p><strong>Delivery:</strong> <span id="deliv"></span></p><p><strong>Pickup:</strong> <span id="pick"></span></p>
 <p><strong>Refunds &amp; cancellation:</strong> <span id="refund"></span></p>
 <h2 class="sub">Payment methods</h2><ul class="pay" id="payList"></ul>
-<p class="muted">Pay after the shop confirms your order. The website does not take payment.</p></div>
+<p class="muted">The website does not take payment. The shop tells you how to pay after confirming your order.</p></div>
 <div><h2>FAQ</h2>
-<details><summary>How do I pay?</summary><p>After you send your order, the shop confirms by WhatsApp and shares payment details.</p></details>
+<details><summary>How do I pay?</summary><p>The shop confirms your order on WhatsApp and tells you how to pay.</p></details>
 <details><summary>Is my order confirmed after I submit?</summary><p>No. It is confirmed only when the shop replies to you.</p></details>
 <details><summary>Can I order custom cakes?</summary><p>Message us on WhatsApp to ask.</p></details>
 <details><summary>Are drinks and juices made fresh?</summary><p>Yes, they are prepared when you order. Please allow extra time on busy days.</p></details></div></div></section>
@@ -95,17 +100,18 @@
 <dialog id="unbox"><div class="in"><button class="x" data-close aria-label="Close">×</button><h2>Unboxing preview</h2><div id="unboxStage"></div></div></dialog>
 <dialog id="detail"><div class="in" id="detailBody"></div></dialog>
 <dialog id="cart"><div class="in"><button class="x" data-close aria-label="Close">×</button><h2>Your cart</h2>
+<div id="pinMountCart"></div>
 <div id="cartBody"></div>
 <form id="form" hidden novalidate>
 <label for="f-name">Name</label><input id="f-name" required maxlength="60" autocomplete="name">
 <label for="f-phone">Phone / WhatsApp</label><input id="f-phone" required inputmode="tel" maxlength="16" autocomplete="tel" placeholder="0123456789">
 <label for="f-method">Pickup or delivery</label><select id="f-method"><option>Pickup</option><option>Delivery</option></select>
 <label for="f-addr">Delivery address (if delivery)</label><input id="f-addr" maxlength="200">
-<label for="f-pay">Preferred payment method</label><select id="f-pay"></select>
+<div id="payRow" hidden><label for="f-pay">Preferred payment method</label><select id="f-pay"></select></div>
 <label for="f-date">Preferred date</label><input id="f-date" type="date">
 <label for="f-note">Note (optional)</label><textarea id="f-note" maxlength="300" rows="2"></textarea>
 <p style="font-size:.85rem">Submitting does not confirm your order or take payment. The shop will contact you.</p>
 <button class="btn" type="submit" style="width:100%">Send order</button></form>
 <div id="result" role="status"></div></div></dialog>
-<script src="js/config.js"></script><script src="js/products.js"></script><script src="js/app.js"></script><script src="js/music.js"></script><script src="js/blindbox.js"></script><script src="js/fx.js"></script>
+<script src="js/config.js"></script><script src="js/products.js"></script><script src="js/app.js"></script><script src="js/music.js"></script><script src="js/blindbox.js"></script><script src="js/fx.js"></script><script src="js/tour.js"></script>
 </body></html>
