@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nor Nor Bakery | Homemade Cakes & Bakes, Freshly Baked Daily</title>
+<meta name="description" content="Nor Nor Bakery – homemade premium cakes, brownies and cookies, baked fresh daily. Order via WhatsApp.">
+<meta property="og:title" content="Nor Nor Bakery"><meta property="og:description" content="Homemade premium cakes, baked with love.">
+<meta property="og:image" content="assets/images/choc-oreo-cake.jpg"><meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Nunito+Sans:wght@400;700&display=swap">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css"></head><body>
+<header><div class="wrap"><a class="logo" href="#top"><img src="assets/logo.svg" alt="" width="40" height="40"><span>Nor Nor Bakery</span></a>
+<button id="menuBtn" aria-label="Menu" aria-expanded="false">☰</button>
+<nav id="nav" aria-label="Main"><a href="#shop">Shop</a><a href="#about">About</a><a href="#info">Delivery & FAQ</a><a href="#contact">Contact</a>
+<button class="cartBtn" id="cartBtn">Cart (<span id="count">0</span>)</button></nav></div></header>
+<main id="top">
+<section class="hero"><i class="chip c1"></i><i class="chip c2"></i><i class="chip c3"></i><i class="chip c4"></i><i class="chip c5"></i><i class="chip c6"></i><div class="wrap"><div class="copy">
+<p class="badge">Freshly baked daily · 100% homemade</p>
+<h1>Homemade, baked with love.</h1>
+<p>Fluffy, rich cakes made fresh every day. The perfect treat for any occasion.</p>
+<a class="btn gold" href="#shop">Shop now</a> <a class="btn alt ghost" href="#contact">Ask on WhatsApp</a></div>
+<div class="photo"><img src="assets/images/choc-oreo-cake.jpg" alt="Homemade chocolate chip and Oreo cake on a wooden board" fetchpriority="high"><span class="stamp">Get yours today!</span></div></div></section>
+<section id="shop"><div class="wrap"><h2>Our bakes</h2>
+<div class="tools"><input id="q" type="search" placeholder="Search cakes, brownies…" aria-label="Search products">
+<select id="cat" aria-label="Category"><option value="">All categories</option></select>
+<select id="sort" aria-label="Sort"><option value="pop">Most popular</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option></select></div>
+<div class="grid" id="grid"></div><p id="none" hidden>No products match. Try another search.</p></div></section>
+<section id="about" class="soft"><div class="wrap two"><div><h2>About Nor Nor Bakery</h2>
+<p>A home bakery making fresh cakes and bakes in small batches. Everything is homemade and baked daily.</p></div>
+<div><h2>How to order</h2><p>Add items to your cart, enter your details and send the order. We confirm by WhatsApp, then arrange payment with you. An order is only confirmed when the shop replies.</p></div></div></section>
+<section id="info"><div class="wrap two"><div><h2>Delivery & pickup</h2>
+<p><strong>Delivery:</strong> <span id="deliv"></span></p><p><strong>Pickup:</strong> <span id="pick"></span></p>
+<p><strong>Refunds & cancellation:</strong> <span id="refund"></span></p></div>
+<div><h2>FAQ</h2>
+<details><summary>How do I pay?</summary><p>After you send your order, the shop confirms by WhatsApp and shares payment details.</p></details>
+<details><summary>Is my order confirmed after I submit?</summary><p>No. It is confirmed only when the shop replies to you.</p></details>
+<details><summary>Can I order custom cakes?</summary><p>Message us on WhatsApp to ask.</p></details></div></div></section>
+<section id="contact" class="soft"><div class="wrap"><h2>Contact</h2>
+<p>WhatsApp / Call: <a id="waLink" target="_blank" rel="noopener noreferrer"></a></p>
+<p>Address: <span id="addr"></span></p><p>Hours: <span id="hours"></span></p>
+<p><a class="btn" id="askBtn" target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
+<span id="soc"></span></p></div></section></main>
+<footer><div class="wrap">© <span id="yr"></span> Nor Nor Bakery. Homemade with love.</div></footer>
+
+<button id="musicBtn" class="music" aria-pressed="false">♪ Music off</button>
+<dialog id="detail"><div class="in" id="detailBody"></div></dialog>
+<dialog id="cart"><div class="in"><button class="x" data-close aria-label="Close">×</button><h2>Your cart</h2>
+<div id="cartBody"></div>
+<form id="form" hidden novalidate>
+<label for="f-name">Name</label><input id="f-name" required maxlength="60" autocomplete="name">
+<label for="f-phone">Phone / WhatsApp</label><input id="f-phone" required inputmode="tel" maxlength="16" autocomplete="tel" placeholder="0123456789">
+<label for="f-method">Pickup or delivery</label><select id="f-method"><option>Pickup</option><option>Delivery</option></select>
+<label for="f-addr">Delivery address (if delivery)</label><input id="f-addr" maxlength="200">
+<label for="f-date">Preferred date</label><input id="f-date" type="date">
+<label for="f-note">Note (optional)</label><textarea id="f-note" maxlength="300" rows="2"></textarea>
+<p style="font-size:.85rem">Submitting does not confirm your order or take payment. The shop will contact you.</p>
+<button class="btn" type="submit" style="width:100%">Send order</button></form>
+<div id="result" role="status"></div></div></dialog>
+<script src="js/config.js"></script><script src="js/products.js"></script><script src="js/app.js"></script><script src="js/music.js"></script>
+</body></html>
