@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Dog sitting and drinking coffee figurine">
+<ellipse cx="100" cy="186" rx="66" ry="8" fill="#3a2317" opacity=".15"/>
+<ellipse cx="100" cy="174" rx="64" ry="14" fill="#e5d3c2"/><ellipse cx="100" cy="168" rx="64" ry="14" fill="#f3e8dc"/>
+<ellipse cx="148" cy="142" rx="8" ry="17" fill="#b97a3e" transform="rotate(30 148 142)"/>
+<ellipse cx="100" cy="138" rx="40" ry="32" fill="#d9a066"/><ellipse cx="100" cy="148" rx="24" ry="20" fill="#fff3e0"/>
+<ellipse cx="54" cy="84" rx="16" ry="30" fill="#8b5a2b" transform="rotate(12 54 84)"/><ellipse cx="146" cy="84" rx="16" ry="30" fill="#8b5a2b" transform="rotate(-12 146 84)"/>
+<ellipse cx="100" cy="84" rx="44" ry="38" fill="#d9a066"/>
+<ellipse cx="100" cy="98" rx="24" ry="18" fill="#fff3e0"/>
+<ellipse cx="100" cy="90" rx="8" ry="6" fill="#3a2317"/><ellipse cx="98" cy="88" rx="2.5" ry="1.5" fill="#fff"/>
+<circle cx="76" cy="78" r="6" fill="#3a2317"/><circle cx="124" cy="78" r="6" fill="#3a2317"/>
+<circle cx="78" cy="76" r="2" fill="#fff"/><circle cx="126" cy="76" r="2" fill="#fff"/>
+<circle cx="64" cy="96" r="7" fill="#ff9aa2" opacity=".7"/><circle cx="136" cy="96" r="7" fill="#ff9aa2" opacity=".7"/>
+<path d="M100 96v5M100 101q-6 6-11 0M100 101q6 6 11 0" fill="none" stroke="#3a2317" stroke-width="2.5" stroke-linecap="round"/>
+<ellipse cx="100" cy="162" rx="34" ry="7" fill="#fff" stroke="#e6d9c8" stroke-width="2"/>
+<path d="M122 128q18 0 14 14q-3 9-14 7" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+<path d="M122 128q18 0 14 14q-3 9-14 7" fill="none" stroke="#e6d9c8" stroke-width="1.5"/>
+<path d="M78 116h44v30q0 14-22 14t-22-14z" fill="#fff" stroke="#e6d9c8" stroke-width="2"/>
+<ellipse cx="100" cy="116" rx="22" ry="5" fill="#7b4a2a"/>
+<path d="M100 118q-6-4-3-6q3-2 3 1q0-3 3-1q3 2-3 6z" fill="#f6e3b8"/>
+<circle cx="80" cy="140" r="7" fill="#d9a066"/><circle cx="120" cy="140" r="7" fill="#d9a066"/>
+<path d="M150 70q-3-5 1-8q4-3 6 1q2-4 6-1q4 3 1 8l-7 6z" fill="#ff7b9c" transform="scale(.7) translate(66 40)"/>
+</svg>

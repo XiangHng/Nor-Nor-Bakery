@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Mystery blind box">
+<rect width="200" height="200" fill="#f6e3e8"/>
+<ellipse cx="100" cy="176" rx="62" ry="8" fill="#3a2317" opacity=".15"/>
+<rect x="42" y="92" width="116" height="82" rx="8" fill="#d98ca3"/>
+<rect x="34" y="68" width="132" height="28" rx="8" fill="#f1d9a0"/>
+<rect x="92" y="68" width="16" height="106" fill="#a9742f"/>
+<path d="M100 68C84 40 62 52 76 64C84 70 96 68 100 68zM100 68C116 40 138 52 124 64C116 70 104 68 100 68z" fill="#a9742f"/>
+<text x="68" y="150" font-family="Georgia,serif" font-weight="700" font-size="52" fill="#fff">?</text>
+<text x="118" y="150" font-family="Georgia,serif" font-weight="700" font-size="52" fill="#fff">?</text>
+<g fill="#f1d9a0"><path d="M30 40l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/><path d="M172 110l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/><path d="M150 30l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g>
+</svg>

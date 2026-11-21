@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="T-rex wearing sunglasses sunbathing with fruit juice figurine">
+<circle cx="162" cy="36" r="17" fill="#ffd23f"/>
+<g stroke="#ffd23f" stroke-width="3" stroke-linecap="round"><path d="M162 8v8M162 56v8M134 36h8M182 36h8M142 16l6 6M176 50l6 6M182 16l-6 6M148 50l-6 6"/></g>
+<ellipse cx="100" cy="186" rx="68" ry="8" fill="#3a2317" opacity=".15"/>
+<ellipse cx="100" cy="174" rx="66" ry="14" fill="#ffb3a7"/><ellipse cx="100" cy="168" rx="66" ry="14" fill="#ffd9cf"/>
+<path d="M64 156C30 156 22 124 40 110" fill="none" stroke="#6cc070" stroke-width="16" stroke-linecap="round"/>
+<ellipse cx="100" cy="138" rx="40" ry="32" fill="#6cc070"/><ellipse cx="100" cy="148" rx="24" ry="20" fill="#d9f2c4"/>
+<path d="M78 56L84 38L92 52L100 34L108 52L116 38L122 56Z" fill="#3f9b4f"/>
+<ellipse cx="100" cy="86" rx="46" ry="38" fill="#6cc070"/>
+<circle cx="92" cy="104" r="2" fill="#2f6b3f"/><circle cx="108" cy="104" r="2" fill="#2f6b3f"/>
+<rect x="60" y="70" width="34" height="22" rx="10" fill="#1b1b1b"/><rect x="106" y="70" width="34" height="22" rx="10" fill="#1b1b1b"/>
+<rect x="94" y="76" width="12" height="4" fill="#1b1b1b"/>
+<path d="M60 76L50 72M140 76L150 72" stroke="#1b1b1b" stroke-width="3" stroke-linecap="round"/>
+<path d="M68 76l8-2M114 76l8-2" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+<circle cx="58" cy="102" r="7" fill="#ff9aa2" opacity=".6"/><circle cx="142" cy="102" r="7" fill="#ff9aa2" opacity=".6"/>
+<path d="M82 108q18 12 36 0" fill="none" stroke="#3a2317" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M90 113l3 5l3-4zM104 114l3 4l3-5z" fill="#fff"/>
+<path d="M82 126h36l-5 36q-1 5-6 5h-14q-5 0-6-5z" fill="#ffa62b" stroke="#bfe3f2" stroke-width="3"/>
+<path d="M110 126l8-24" stroke="#ff5d73" stroke-width="4" stroke-linecap="round"/>
+<circle cx="84" cy="126" r="8" fill="#ffd23f" stroke="#ff9f1c" stroke-width="2"/><path d="M84 118v16M76 126h16" stroke="#ff9f1c" stroke-width="1.5"/>
+<ellipse cx="78" cy="142" rx="9" ry="7" fill="#6cc070"/><ellipse cx="122" cy="142" rx="9" ry="7" fill="#6cc070"/>
+</svg>

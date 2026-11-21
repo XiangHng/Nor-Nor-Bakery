@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Cat sitting and eating cake figurine">
+<ellipse cx="100" cy="186" rx="66" ry="8" fill="#3a2317" opacity=".15"/>
+<ellipse cx="100" cy="174" rx="64" ry="14" fill="#f2d9d2"/><ellipse cx="100" cy="168" rx="64" ry="14" fill="#fbeee9"/>
+<path d="M134 158C168 156 174 122 152 112" fill="none" stroke="#f4a259" stroke-width="14" stroke-linecap="round"/>
+<ellipse cx="100" cy="138" rx="40" ry="32" fill="#f4a259"/><ellipse cx="100" cy="148" rx="24" ry="20" fill="#fff3e0"/>
+<path d="M58 70L60 34L88 54Z" fill="#f4a259"/><path d="M142 70L140 34L112 54Z" fill="#f4a259"/>
+<path d="M64 62L65 44L79 54Z" fill="#f7b6b6"/><path d="M136 62L135 44L121 54Z" fill="#f7b6b6"/>
+<ellipse cx="100" cy="86" rx="46" ry="38" fill="#f4a259"/>
+<path d="M92 52v10M100 50v12M108 52v10" stroke="#d9822b" stroke-width="3" stroke-linecap="round"/>
+<path d="M70 86q8-10 16 0M114 86q8-10 16 0" fill="none" stroke="#3a2317" stroke-width="3.5" stroke-linecap="round"/>
+<circle cx="66" cy="100" r="8" fill="#ff9aa2" opacity=".7"/><circle cx="134" cy="100" r="8" fill="#ff9aa2" opacity=".7"/>
+<path d="M96 95h8l-4 5z" fill="#e5707e"/>
+<path d="M100 100q-6 8-12 2M100 100q6 8 12 2" fill="none" stroke="#3a2317" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M52 94H38M52 102l-13 4M148 94h14M148 102l13 4" stroke="#3a2317" stroke-width="2" stroke-linecap="round"/>
+<ellipse cx="100" cy="160" rx="36" ry="8" fill="#fff" stroke="#e6d9c8" stroke-width="2"/>
+<path d="M80 156h40v-22q-20-10-40 0z" fill="#f9d9a6"/><rect x="80" y="144" width="40" height="5" fill="#fff"/>
+<path d="M80 134q20-10 40 0v4q-20-8-40 0z" fill="#ff8fab"/>
+<circle cx="100" cy="128" r="6" fill="#e63946"/><path d="M97 123l3-3 3 3z" fill="#4caf50"/>
+<circle cx="80" cy="152" r="7" fill="#f4a259"/><circle cx="120" cy="152" r="7" fill="#f4a259"/>
+<circle cx="132" cy="162" r="2" fill="#f9d9a6"/><circle cx="68" cy="164" r="2" fill="#f9d9a6"/>
+</svg>

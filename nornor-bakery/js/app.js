@@ -1,4 +1,4 @@
-const $ = s => document.querySelector(s);
+﻿const $ = s => document.querySelector(s);
 const rm = n => "RM " + Number(n).toFixed(2);
 const el = (t, props = {}, ...kids) => { const e = document.createElement(t); Object.assign(e, props); kids.forEach(k => e.append(k)); return e; };
 const wa = txt => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`;
@@ -9,22 +9,35 @@ const save = () => { try { localStorage.setItem("nn_cart", JSON.stringify(cart))
 const lines = () => Object.entries(cart).map(([id, q]) => ({ p: find(id), q })).filter(l => l.p && l.p.available && l.q > 0);
 const total = () => lines().reduce((s, l) => s + l.p.price * l.q, 0);
 
-function photo(p, lazy = true) {
-  if (!p.image) return el("span", { textContent: p.name });
-  const i = el("img", { src: p.image, alt: p.name, loading: lazy ? "lazy" : "eager" });
-  i.onerror = () => i.replaceWith(el("span", { textContent: p.name })); return i;
+const CAT_STYLE = { Cakes: ["🍰", "#f2d9d2", "#e9b9ad"], Cookies: ["🍪", "#f1e2c4", "#dcc08a"], Brownies: ["🍫", "#d9c0b0", "#a67a62"],
+  Pastries: ["🥐", "#f6e3b8", "#e3c06f"], "Premium Drinks": ["☕", "#e5d3c2", "#b88f6c"], "Fruit Juices": ["🍹", "#fde0c2", "#f7a96b"] };
+function art(p) {
+  const [e, a, b] = CAT_STYLE[p.category] || ["🧁", "#f2d9d2", "#e9b9ad"];
+  const d = el("span", { className: "art" }, el("i", { textContent: p.emoji || e }), el("small", { textContent: p.name }));
+  d.style.background = `linear-gradient(145deg,${a},${b})`; return d;
 }
+function photo(p, lazy = true) {
+  if (!p.image) return art(p);
+  const i = el("img", { src: p.image, alt: p.name, loading: lazy ? "lazy" : "eager" });
+  i.onerror = () => i.replaceWith(art(p)); return i;
+}
+let toastT;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2000); }
+let curCat = "";
+const setCat = c => { curCat = c; render(); };
 function add(id, open) {
   const p = find(id); if (!p || !p.available) return;
   if (p.checkoutUrl && open === "buy") { window.open(p.checkoutUrl, "_blank", "noopener,noreferrer"); return; }
-  cart[id] = Math.min(20, (cart[id] || 0) + 1); save(); render();
+  cart[id] = Math.min(20, (cart[id] || 0) + 1); save(); render(); toast("Added: " + p.name);
   if (open) { $("#detail").close(); openCart(); }
 }
 function render() {
-  const q = $("#q").value.trim().toLowerCase(), c = $("#cat").value, s = $("#sort").value;
+  const q = $("#q").value.trim().toLowerCase(), c = curCat, s = $("#sort").value;
   let list = PRODUCTS.filter(p => (!c || p.category === c) && (!q || (p.name + p.desc + p.category).toLowerCase().includes(q)));
   list.sort((a, b) => s === "lo" ? a.price - b.price : s === "hi" ? b.price - a.price : b.popularity - a.popularity);
   const g = $("#grid"); g.replaceChildren(); $("#none").hidden = list.length > 0;
+  $("#resultCount").textContent = list.length + " item" + (list.length === 1 ? "" : "s") + (c ? " in " + c : "");
+  document.querySelectorAll("#chips button").forEach(b => { const on = b.dataset.c === c; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
   list.forEach(p => {
     const ph = el("button", { className: "ph", type: "button", ariaLabel: "View " + p.name }, photo(p));
     p.labels.forEach(l => ph.append(el("span", { className: "tag", textContent: l })));
@@ -36,12 +49,13 @@ function render() {
       el("span", { className: "price", textContent: rm(p.price) }),
       p.available ? "" : el("span", { className: "sold", textContent: "Currently unavailable" }), btn)));
   });
-  $("#count").textContent = lines().reduce((s, l) => s + l.q, 0);
+  const n = lines().reduce((s, l) => s + l.q, 0);
+  $("#count").textContent = n; $("#barCount").textContent = n; $("#barTotal").textContent = rm(total()); $("#cartBar").hidden = n === 0;
   if ($("#cart").open) cartView();
 }
 function detail(p) {
   const b = $("#detailBody"); b.replaceChildren();
-  const ph = el("div", {}, p.image ? photo(p, false) : "");
+  const ph = el("div", { className: "dph" }, photo(p, false));
   const buy = el("button", { className: "btn", textContent: p.available ? (p.checkoutUrl ? "Buy now" : "Add to cart") : "Sold out", disabled: !p.available });
   buy.onclick = () => add(p.id, p.checkoutUrl ? "buy" : true);
   const ask = el("a", { className: "btn alt", textContent: "Ask about this", target: "_blank", rel: "noopener noreferrer", href: wa(`Hi ${CONFIG.shopName}, I'd like to ask about: ${p.name}`) });
@@ -85,8 +99,14 @@ $("#form").onsubmit = async e => {
          : "We could not send the order automatically. Please tap the button below to send it by WhatsApp. It is not confirmed until the shop replies.", el("br"), el("br"), waBtn));
   if (sent) { cart = {}; save(); render(); $("#cartBody").replaceChildren(); $("#form").hidden = true; }
 };
-CATEGORIES.forEach(c => $("#cat").append(el("option", { value: c, textContent: c })));
-["#q", "#cat", "#sort"].forEach(s => $(s).addEventListener("input", render));
+const go = c => { setCat(c); $("#q").value = ""; render(); $("#shop").scrollIntoView({ behavior: "smooth" }); };
+["", ...CATEGORIES].forEach(c => { const b = el("button", { type: "button", role: "tab", textContent: c || "All", className: "chip-b" }); b.dataset.c = c; b.onclick = () => setCat(c); $("#chips").append(b); });
+CATEGORIES.forEach(c => { const [e, a, b2] = CAT_STYLE[c]; const t = el("button", { type: "button", className: "tile" }, el("i", { textContent: e }), el("span", { textContent: c }), el("small", { textContent: PRODUCTS.filter(p => p.category === c).length + " items" }));
+  t.style.background = `linear-gradient(145deg,${a},${b2})`; t.onclick = () => go(c); $("#tiles").append(t); });
+$("#promo").onclick = e => { e.preventDefault(); go("Cakes"); };
+["#q", "#sort"].forEach(s => $(s).addEventListener("input", render));
+$("#cartBar").onclick = openCart;
+$("#f-date").min = new Date().toISOString().slice(0, 10);
 $("#cartBtn").onclick = openCart;
 document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => b.closest("dialog").close());
 document.querySelectorAll("dialog").forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
@@ -97,5 +117,13 @@ fill("#deliv", CONFIG.deliveryInfo); fill("#pick", CONFIG.pickupInfo); fill("#re
 $("#waLink").textContent = "+" + CONFIG.whatsapp; $("#waLink").href = wa(`Hi ${CONFIG.shopName}!`);
 $("#askBtn").href = wa(`Hi ${CONFIG.shopName}, I'd like to ask about your products and availability.`);
 [["Instagram", CONFIG.instagram], ["TikTok", CONFIG.tiktok]].forEach(([n, u]) => { if (/^https:\/\//.test(u)) $("#soc").append(" ", el("a", { href: u, textContent: n, target: "_blank", rel: "noopener noreferrer" })); });
+$("#customBtn").href = wa(`Hi ${CONFIG.shopName}, I'd like to ask about a custom order.`);
 $("#yr").textContent = new Date().getFullYear();
 render();
+(() => {
+  const i = $("#intro"); if (!i) return;
+  try { sessionStorage.setItem("nn_intro", "1"); } catch {}
+  const done = () => i.classList.add("out"); setTimeout(done, 2600); i.onclick = done;
+})();
+
+
