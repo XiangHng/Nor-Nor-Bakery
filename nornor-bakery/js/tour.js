@@ -12,13 +12,29 @@
   const reduce = () => matchMedia("(prefers-reduced-motion:reduce)").matches;
   const vis = e => { const r = e.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
   const find = sel => [...document.querySelectorAll(sel)].find(vis);
-  let card, inner, hl, idx = 0, open = false, raf = 0, glideT;
+  let card, inner, hl, idx = 0, open = false, raf = 0, glideT, fading = false, fadeT;
 
   const help = el("button", { className: "helpBtn", type: "button", textContent: "?", title: "Show quick tour" });
   help.setAttribute("aria-label", "Show quick tour"); document.body.append(help);
 
   function clear() { if (hl) hl.classList.remove("tour-hl"); hl = null; }
-  function close() { open = false; cancelAnimationFrame(raf); clear(); if (card) { card.remove(); card = inner = null; } }
+  function close() { open = false; fading = false; clearTimeout(fadeT); cancelAnimationFrame(raf); clear(); if (card) { card.remove(); card = inner = null; } }
+
+  // 用户往下滑、按键盘滚动、或点其他地方：提示卡和边框慢慢淡出，然后关闭
+  function fade() {
+    if (!open || fading || !card) return; fading = true;
+    card.classList.add("fading"); if (hl) hl.classList.add("tour-fade");
+    fadeT = setTimeout(close, reduce() ? 0 : 900);
+  }
+  const SCROLL_KEYS = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "];
+  addEventListener("wheel", e => { if (Math.abs(e.deltaY) > 4) fade(); }, { passive: true });
+  addEventListener("touchmove", fade, { passive: true });
+  addEventListener("keydown", e => { if (SCROLL_KEYS.includes(e.key) && !/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName)) fade(); });
+  addEventListener("pointerdown", e => {
+    if (!open || !card) return; const t = e.target;
+    if (card.contains(t) || help.contains(t) || (hl && hl.contains(t))) return;   // 点提示卡、? 按钮或发光的目标不算
+    fade();
+  }, true);
 
   // 把提示卡放在目标旁边：优先目标下方，放不下就放上方，再放不下就贴屏幕底部
   function place() {
@@ -38,6 +54,7 @@
   function show(i, dir = 1) {
     while (i >= 0 && i < STEPS.length && !find(STEPS[i].sel)) i += dir;       // 跳过当前看不到的步骤
     if (i < 0 || i >= STEPS.length) return i < 0 ? show(0, 1) : close();
+    if (fading) return;
     idx = i; clear(); const s = STEPS[i], t = find(s.sel);
     const tall = t.getBoundingClientRect().height > innerHeight * 0.45;
     t.scrollIntoView({ behavior: reduce() ? "auto" : "smooth", block: tall ? "start" : "center" });

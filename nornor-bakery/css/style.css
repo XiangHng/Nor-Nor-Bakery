@@ -181,7 +181,7 @@ nav a:hover::after,nav a.active::after{transform:scaleX(1)}
 .linkBtn{background:none;border:0;padding:0;font:inherit;font-size:.85rem;color:var(--caramel);text-decoration:underline;cursor:pointer}
 
 /* ---- v6: quick tour ---- */
-.tour{position:fixed;left:0;top:0;z-index:90;width:min(340px,92vw);will-change:transform;animation:tfade .3s ease both}
+.tour{position:fixed;left:0;top:0;z-index:90;width:min(340px,92vw);will-change:transform;animation:tfade .3s ease backwards}
 .tour.gliding{transition:transform .6s cubic-bezier(.25,.9,.3,1.05)}
 .tour-in{position:relative;background:#fff;color:var(--cocoa);border:1.5px solid var(--caramel);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(58,35,23,.28);animation:tbob 3.2s ease-in-out infinite}
 .tour-in::after{content:"";position:absolute;left:var(--ax,50%);width:12px;height:12px;background:#fff;transform:translateX(-50%) rotate(45deg);display:none}
@@ -214,3 +214,8 @@ nav a:hover::after,nav a.active::after{transform:scaleX(1)}
 @media(max-width:960px){.shopLayout{grid-template-columns:1fr}.side{display:none}}
 @media(min-width:961px){.chips{display:none}}
 @media(prefers-reduced-motion:reduce){.sideB{transition:none}}
+
+/* quick tour: gradual fade-out */
+.tour.fading{opacity:0;transition:opacity .9s ease;pointer-events:none}
+.tour-hl.tour-fade{animation:none;outline-color:transparent;box-shadow:0 0 0 0 rgba(169,116,47,0);transition:outline-color .9s ease,box-shadow .9s ease}
+@media(prefers-reduced-motion:reduce){.tour.fading,.tour-hl.tour-fade{transition:none}}

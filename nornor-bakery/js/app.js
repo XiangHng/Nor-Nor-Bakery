@@ -126,8 +126,9 @@ async function redeem(x) {
     const d = await res.json().catch(() => ({}));
     if (res.ok && d.ok && d.kind === "voucher") { voucher = { code: d.code, percent: d.percent, off: d.off, min: d.min, max: d.max, label: d.label }; saveVoucher(); boxes.forEach(y => y.input.value = ""); m.className = "pinMsg okTxt"; m.textContent = "🎟️ Voucher " + d.code + " added!"; creditView(); render(); fx(14, ["🎟️", "✨", "⭐"]); }
     else if (res.ok && d.ok) { credit = +(credit + d.amount).toFixed(2); usedPins.push(pin); saveCredit(); boxes.forEach(y => y.input.value = ""); m.className = "pinMsg okTxt"; m.textContent = "🎉 " + rm(d.amount) + " credit added!"; creditView(); fx(18, ["🎉", "✨", "⭐", "🧁"]); }
-    else m.textContent = res.status === 404 || res.status === 400 ? "That PIN or voucher is not valid." : "Could not check the code. Please try again later.";
-  } catch { m.textContent = "Could not check the code. Please try again later."; }
+    else if (d.ok === false) m.textContent = "That PIN or voucher is not valid.";
+    else m.textContent = "Can't check codes on this website right now. Please try again later or ask the shop on WhatsApp.";
+  } catch { m.textContent = "Can't check codes on this website right now. Please try again later or ask the shop on WhatsApp."; }
   x.go.disabled = false;
 }
 $("#pinMountCart").append(pinBox()); $("#pinMountPage").append(pinBox());
