@@ -32,6 +32,8 @@ function photo(p, lazy = true) {
 let toastT;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2000); }
 let curCat = "";
+const QF = { "New": p => p.labels.includes("New"), "Best sellers": p => p.popularity >= 85, "Under RM15": p => p.price < 15 };
+const quick = new Set();
 const setCat = c => { curCat = c; render(); };
 function add(id, open) {
   const p = find(id); if (!p || !p.available) return;
@@ -41,10 +43,12 @@ function add(id, open) {
 }
 function render() {
   const q = $("#q").value.trim().toLowerCase(), c = curCat, s = $("#sort").value;
-  let list = PRODUCTS.filter(p => (!c || p.category === c) && (!q || (p.name + p.desc + p.category).toLowerCase().includes(q)));
+  let list = PRODUCTS.filter(p => (!c || p.category === c) && [...quick].every(k => QF[k](p)) && (!q || (p.name + p.desc + p.category).toLowerCase().includes(q)));
   list.sort((a, b) => s === "lo" ? a.price - b.price : s === "hi" ? b.price - a.price : b.popularity - a.popularity);
   const g = $("#grid"); g.replaceChildren(); $("#none").hidden = list.length > 0;
   $("#resultCount").textContent = list.length + " item" + (list.length === 1 ? "" : "s") + (c ? " in " + c : "");
+  document.querySelectorAll("#side [data-c]").forEach(b => b.classList.toggle("on", b.dataset.c === c));
+  document.querySelectorAll("#side [data-q]").forEach(b => { const on = quick.has(b.dataset.q); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
   document.querySelectorAll("#chips button").forEach(b => { const on = b.dataset.c === c; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
   list.forEach(p => {
     const ph = el("button", { className: "ph", type: "button", ariaLabel: "View " + p.name }, photo(p));
@@ -153,6 +157,18 @@ $("#form").onsubmit = async e => {
          : "We could not send the order automatically. Please tap the button below to send it by WhatsApp. It is not confirmed until the shop replies.", el("br"), el("br"), waBtn));
   if (sent) { spend(); cart = {}; save(); render(); $("#cartBody").replaceChildren(); $("#form").hidden = true; }
 };
+(() => {
+  const s = $("#side"), h = t => el("h3", { className: "sideH", textContent: t }), cats = el("div", { className: "sideList" }), qs = el("div", { className: "sideList" });
+  ["", ...CATEGORIES].forEach(c => {
+    const b = el("button", { type: "button", className: "sideB" }, el("span", { textContent: c || "All" }), el("em", { textContent: c ? PRODUCTS.filter(p => p.category === c).length : PRODUCTS.length }));
+    b.dataset.c = c; b.onclick = () => setCat(c); cats.append(b);
+  });
+  Object.keys(QF).forEach(k => {
+    const b = el("button", { type: "button", className: "sideB sq", textContent: k }); b.dataset.q = k; b.setAttribute("aria-pressed", "false");
+    b.onclick = () => { quick.has(k) ? quick.delete(k) : quick.add(k); render(); }; qs.append(b);
+  });
+  s.append(h("Categories"), cats, h("Quick filters"), qs);
+})();
 const go = c => { setCat(c); $("#q").value = ""; render(); $("#shop").scrollIntoView({ behavior: "smooth" }); };
 ["", ...CATEGORIES].forEach(c => { const b = el("button", { type: "button", role: "tab", textContent: c || "All", className: "chip-b" }); b.dataset.c = c; b.onclick = () => setCat(c); $("#chips").append(b); });
 CATEGORIES.forEach(c => { const [e, a, b2] = CAT_STYLE[c]; const t = el("button", { type: "button", className: "tile" }, el("i", { textContent: e }), el("span", { textContent: c }), el("small", { textContent: PRODUCTS.filter(p => p.category === c).length + " items" }));
